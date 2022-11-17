@@ -1,4 +1,6 @@
 version: '3'
+
+
 services:
   postgres:
     image: postgres:11.5-alpine
@@ -7,23 +9,19 @@ services:
     healthcheck:
         test: ["CMD", "pg_isready", "-U", "postgres"]
         interval: 1s
-    networks:
-      - dbs
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
   elasticsearch:
     image: hypothesis/elasticsearch:latest
     ports:
       - '127.0.0.1:9200:9200'
     environment:
       - discovery.type=single-node
+      - bootstrap.system_call_filter=false
+      - network.host=0.0.0.0
+      - ES_JAVA_OPTS= -Xms400m -Xmx400m
   rabbit:
     image: rabbitmq:3.6-management-alpine
     ports:
       - '127.0.0.1:5672:5672'
       - '127.0.0.1:15672:15672'
-
-networks:
-  # This external network allows FDW connections between H, LMS and report DBs.
-  # To avoid having unnecessary dependencies between the projects
-  # the network is created with `docker network crate dbs` in each project's Makefile (make services)
-  dbs:
-    external: true
