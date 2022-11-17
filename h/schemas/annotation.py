@@ -35,9 +35,7 @@ class AnnotationSchema(JSONSchema):
                 "properties": {
                     "dc": {
                         "type": "object",
-                        "properties": {
-                            "identifier": {"type": "array", "items": {"type": "string"}}
-                        },
+                        "properties": {"identifier": {"type": "array", "items": {"type": "string"}}},
                     },
                     "highwire": {
                         "type": "object",
@@ -121,18 +119,15 @@ class CreateAnnotationSchema:
         new_appstruct["tags"] = appstruct.pop("tags", [])
         new_appstruct["groupid"] = appstruct.pop("group", "__world__")
         new_appstruct["references"] = appstruct.pop("references", [])
+        new_appstruct["credence"] = appstruct.pop("credence", 50)
 
         if "permissions" in appstruct:
-            new_appstruct["shared"] = _shared(
-                appstruct.pop("permissions"), new_appstruct["groupid"]
-            )
+            new_appstruct["shared"] = _shared(appstruct.pop("permissions"), new_appstruct["groupid"])
         else:
             new_appstruct["shared"] = False
 
         if "target" in appstruct:
-            new_appstruct["target_selectors"] = _target_selectors(
-                appstruct.pop("target")
-            )
+            new_appstruct["target_selectors"] = _target_selectors(appstruct.pop("target"))
 
         # Replies always get the same groupid as their parent. The parent's
         # groupid is added to the reply annotation later by the storage code.
@@ -140,9 +135,7 @@ class CreateAnnotationSchema:
         if new_appstruct["references"] and "groupid" in new_appstruct:
             del new_appstruct["groupid"]
 
-        new_appstruct["document"] = _document(
-            appstruct.pop("document", {}), new_appstruct["target_uri"]
-        )
+        new_appstruct["document"] = _document(appstruct.pop("document", {}), new_appstruct["target_uri"])
 
         new_appstruct["extra"] = appstruct
 
@@ -178,14 +171,13 @@ class UpdateAnnotationSchema:
             new_appstruct["target_uri"] = new_uri
 
         if "permissions" in appstruct:
-            new_appstruct["shared"] = _shared(
-                appstruct.pop("permissions"), self.groupid
-            )
+            new_appstruct["shared"] = _shared(appstruct.pop("permissions"), self.groupid)
 
         if "target" in appstruct:
-            new_appstruct["target_selectors"] = _target_selectors(
-                appstruct.pop("target")
-            )
+            new_appstruct["target_selectors"] = _target_selectors(appstruct.pop("target"))
+
+        if "credence" in appstruct:
+            new_appstruct["credence"] = appstruct.pop("credence", 50)
 
         # Fields that are allowed to be updated and that have the same internal
         # and external name.
@@ -213,12 +205,8 @@ def _document(document, claimant):
 
     """
     document = document or {}
-    document_uri_dicts = document_claims.document_uris_from_data(
-        copy.deepcopy(document), claimant=claimant
-    )
-    document_meta_dicts = document_claims.document_metas_from_data(
-        copy.deepcopy(document), claimant=claimant
-    )
+    document_uri_dicts = document_claims.document_uris_from_data(copy.deepcopy(document), claimant=claimant)
+    document_meta_dicts = document_claims.document_metas_from_data(copy.deepcopy(document), claimant=claimant)
     return {
         "document_uri_dicts": document_uri_dicts,
         "document_meta_dicts": document_meta_dicts,
@@ -418,9 +406,7 @@ class SearchParamsSchema(colander.Schema):
         search_after = cstruct.get("search_after", None)
 
         if search_after:
-            if sort in ["updated", "created"] and not self._date_is_parsable(
-                search_after
-            ):
+            if sort in ["updated", "created"] and not self._date_is_parsable(search_after):
                 raise colander.Invalid(
                     node,
                     """search_after must be a parsable date in the form

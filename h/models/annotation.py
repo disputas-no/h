@@ -33,9 +33,7 @@ class Annotation(Base):
 
     #: Annotation ID: these are stored as UUIDs in the database, and mapped
     #: transparently to a URL-safe Base64-encoded string.
-    id = sa.Column(
-        types.URLSafeUUID, server_default=sa.func.uuid_generate_v1mc(), primary_key=True
-    )
+    id = sa.Column(types.URLSafeUUID, server_default=sa.func.uuid_generate_v1mc(), primary_key=True)
 
     #: The timestamp when the annotation was created.
     created = sa.Column(
@@ -73,15 +71,16 @@ class Annotation(Base):
         lazy="select",
     )
 
+    # Credence value
+    credence = sa.Column("credence", sa.Integer)
+
     #: The textual body of the annotation.
     _text = sa.Column("text", sa.UnicodeText)
     #: The Markdown-rendered and HTML-sanitized textual body of the annotation.
     _text_rendered = sa.Column("text_rendered", sa.UnicodeText)
 
     #: The tags associated with the annotation.
-    tags = sa.Column(
-        MutableList.as_mutable(pg.ARRAY(sa.UnicodeText, zero_indexes=True))
-    )
+    tags = sa.Column(MutableList.as_mutable(pg.ARRAY(sa.UnicodeText, zero_indexes=True)))
 
     #: A boolean indicating whether this annotation is shared with members of
     #: the group it is published in. "Private"/"Only me" annotations have
@@ -98,9 +97,7 @@ class Annotation(Base):
     #: The URI of the annotated page in normalized form.
     _target_uri_normalized = sa.Column("target_uri_normalized", sa.UnicodeText)
     #: The serialized selectors for the annotation on the annotated page.
-    target_selectors = sa.Column(
-        types.AnnotationSelectorJSONB, default=list, server_default=sa.func.jsonb("[]")
-    )
+    target_selectors = sa.Column(types.AnnotationSelectorJSONB, default=list, server_default=sa.func.jsonb("[]"))
 
     #: An array of annotation IDs which are ancestors of this annotation.
     references = sa.Column(
