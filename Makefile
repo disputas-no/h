@@ -166,7 +166,9 @@ sure: checkformatting lint test coverage functests
 
 .PHONY: docker
 docker:
-	@git archive --format=tar.gz HEAD | docker build -t hypothesis/hypothesis:$(DOCKER_TAG) -
+	@git archive --format=tar.gz HEAD | docker build -t hypothesis:$(DOCKER_TAG) -
+
+current_dir := $(shell pwd)
 
 .PHONY: run-docker
 run-docker:
@@ -182,7 +184,7 @@ run-docker:
 		-e "APP_URL=http://localhost:5000" \
 		-e "AUTHORITY=localhost" \
 		-e "BROKER_URL=amqp://guest:guest@rabbit:5672//" \
-		-e "CLIENT_OAUTH_ID" \
+		-e "CLIENT_OAUTH_ID=f0f2029e-5ce9-11ed-a4f5-631c21723c09" \
 		-e "CLIENT_URL=http://localhost:3001/hypothesis" \
 		-e "DATABASE_URL=postgresql://postgres@postgres/postgres" \
 		-e "ELASTICSEARCH_URL=http://elasticsearch:9200" \
@@ -194,9 +196,12 @@ run-docker:
 		-e "ENABLE_WEBSOCKET=true" \
 		-e "WEBSOCKET_CONFIG=conf/websocket-monolithic.ini" \
 		-e "ENABLE_WORKER=true" \
+		-e "IS_SERVER=false"
 		-p 5000:5000 \
+		-v $(current_dir)/h:/var/lib/hypothesis/h \
+		-v $(current_dir)/mail:/var/lib/hypothesis/mail \
 		--name hypothesis \
-		hypothesis/hypothesis:$(DOCKER_TAG)
+		hypothesis:$(DOCKER_TAG)
 
 DOCKER_TAG = dev
 
