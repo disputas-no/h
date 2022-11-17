@@ -22,7 +22,8 @@ RUN apk add --no-cache \
     libffi \
     libpq \
     nginx \
-    git
+    git \
+    openssl
 
 # Create the hypothesis user, group, home directory and package directory.
 RUN addgroup -S hypothesis && adduser -S -G hypothesis -h /var/lib/hypothesis hypothesis
@@ -45,6 +46,9 @@ RUN apk add --no-cache --virtual build-deps \
   && pip install --no-cache-dir -U pip \
   && pip install --no-cache-dir -r requirements.txt \
   && apk del build-deps
+
+# Keep node for runtime
+RUN apk add nodejs
 
 # Copy frontend assets.
 COPY --from=build /tmp/frontend-build/build build
