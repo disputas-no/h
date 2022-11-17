@@ -34,3 +34,6 @@ mail/
 tests/py3-actual-failures.txt
 
 .devdata.env
+
+# Postgres data (docker volume)
+postgres-data/
