@@ -166,7 +166,7 @@ sure: checkformatting lint test coverage functests
 
 .PHONY: docker
 docker:
-	@git archive --format=tar.gz HEAD | docker build -t hypothesis:$(DOCKER_TAG) -
+	@docker build -t hypothesis:$(DOCKER_TAG) .
 
 current_dir := $(shell pwd)
 
@@ -196,7 +196,7 @@ run-docker:
 		-e "ENABLE_WEBSOCKET=true" \
 		-e "WEBSOCKET_CONFIG=conf/websocket-monolithic.ini" \
 		-e "ENABLE_WORKER=true" \
-		-e "IS_SERVER=false"
+		-e "IS_SERVER=false" \
 		-p 5000:5000 \
 		-v $(current_dir)/h:/var/lib/hypothesis/h \
 		-v $(current_dir)/mail:/var/lib/hypothesis/mail \
