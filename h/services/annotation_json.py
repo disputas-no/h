@@ -52,6 +52,7 @@ class AnnotationJSONService:
                 "text": annotation.text or "",
                 "tags": annotation.tags or [],
                 "group": annotation.groupid,
+                "credence": annotation.credence,
                 #  Convert our simple internal annotation storage format into the
                 #  legacy complex permissions dict format that is still used in
                 #  some places.
@@ -99,9 +100,7 @@ class AnnotationJSONService:
             permission=Permission.Annotation.MODERATE,
         )
         if user_is_moderator:
-            model["moderation"] = {
-                "flagCount": self._flag_service.flag_count(annotation)
-            }
+            model["moderation"] = {"flagCount": self._flag_service.flag_count(annotation)}
 
         # The hidden value depends on whether you are the author
         user_is_author = user and user.userid == annotation.userid
