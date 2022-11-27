@@ -59,6 +59,9 @@ COPY . .
 # If we're building from a git clone, ensure that .git is writeable
 RUN [ -d .git ] && chown -R hypothesis:hypothesis .git || :
 
+# Make sure frontend is writable
+RUN chown -R hypothesis:hypothesis build
+
 # Expose the default port.
 EXPOSE 5000
 
