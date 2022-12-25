@@ -63,9 +63,7 @@ def sidebar_app(request, extra=None):
         # `h.sentry_environment` primarily refers to h's Sentry environment,
         # but it also matches the client environment for the embed (dev, qa, prod).
         sentry_environment = settings.get("h.sentry_environment")
-        app_config.update(
-            {"sentry": {"dsn": sentry_public_dsn, "environment": sentry_environment}}
-        )
+        app_config.update({"sentry": {"dsn": sentry_public_dsn, "environment": sentry_environment}})
 
     ctx = {
         "app_config": json.dumps(app_config),
@@ -88,9 +86,7 @@ def sidebar_app(request, extra=None):
     # math rendering using KaTeX relies on them.
     style_src = f"{client_origin} 'unsafe-inline'"
 
-    request.response.headers[
-        "Content-Security-Policy"
-    ] = f"script-src {client_origin}; style-src {style_src}"
+    request.response.headers["Content-Security-Policy"] = f"script-src {client_origin}; style-src {style_src}"
 
     return ctx
 

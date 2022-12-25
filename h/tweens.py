@@ -34,9 +34,7 @@ def conditional_http_tween_factory(handler, registry):
         # ourself. We only do this for GET or HEAD requests that result in a
         # status code of 200. The subtleties of doing it correctly in other
         # cases don't bear thinking about (at the moment).
-        have_buffered_response = (
-            isinstance(response.app_iter, Sequence) and len(response.app_iter) == 1
-        )
+        have_buffered_response = isinstance(response.app_iter, Sequence) and len(response.app_iter) == 1
         cacheable = request.method in {"GET", "HEAD"} and response.status_code == 200
         if have_buffered_response and cacheable:
             response.conditional_response = True
@@ -70,15 +68,13 @@ def invalid_path_tween_factory(handler, registry):
 
 
 def redirect_tween_factory(handler, registry, redirects=None):
-    if redirects is None:
-        # N.B. If we fail to load or parse the redirects file, the application
-        # will fail to boot. This is deliberate: a missing/corrupt redirects
-        # file should result in a healthcheck failure.
+    # if redirects is None:
+    # N.B. If we fail to load or parse the redirects file, the application
+    # will fail to boot. This is deliberate: a missing/corrupt redirects
+    # file should result in a healthcheck failure.
 
-        with (importlib_resources.files("h") / "redirects").open(
-            encoding="utf-8"
-        ) as handle:
-            redirects = parse_redirects(handle)
+    with (importlib_resources.files("h") / "redirects").open(encoding="utf-8") as handle:
+        redirects = parse_redirects(handle)
 
     def redirect_tween(request):
         url = lookup_redirects(redirects, request)
@@ -100,9 +96,7 @@ def security_header_tween_factory(handler, registry):
         # list, thus browsers that don't support
         # strict-origin-when-cross-origin will fall back to
         # origin-when-cross-origin.
-        resp.headers[
-            "Referrer-Policy"
-        ] = "origin-when-cross-origin, strict-origin-when-cross-origin"
+        resp.headers["Referrer-Policy"] = "origin-when-cross-origin, strict-origin-when-cross-origin"
         # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection
         resp.headers["X-XSS-Protection"] = "1; mode=block"
         return resp
