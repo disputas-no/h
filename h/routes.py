@@ -77,9 +77,7 @@ def includeme(config):  # pylint: disable=too-many-statements
     config.add_route("admin.search", "/admin/search")
 
     # Annotations & stream
-    config.add_route(
-        "annotation", "/a/{id}", factory="h.traversal:AnnotationRoot", traverse="/{id}"
-    )
+    config.add_route("annotation", "/a/{id}", factory="h.traversal:AnnotationRoot", traverse="/{id}")
     config.add_route("stream", "/stream")
     config.add_route("stream.user_query", "/u/{user}")
     config.add_route("stream.tag_query", "/t/{tag}")
@@ -98,9 +96,7 @@ def includeme(config):  # pylint: disable=too-many-statements
     # template generator in `h/views/api.py`
     config.add_route("api.index", "/api/")
     config.add_route("api.links", "/api/links")
-    config.add_route(
-        "api.annotations", "/api/annotations", factory="h.traversal:AnnotationRoot"
-    )
+    config.add_route("api.annotations", "/api/annotations", factory="h.traversal:AnnotationRoot")
     config.add_route(
         "api.annotation",
         "/api/annotations/{id:[A-Za-z0-9_-]{20,22}}",
@@ -228,7 +224,7 @@ def includeme(config):  # pylint: disable=too-many-statements
     config.add_route("status", "/_status")
 
     # Static
-    config.add_route("about", "/about/", static=True)
+    config.add_route("about", "/about", static=True)
     config.add_route("bioscience", "/bioscience/", static=True)
     config.add_route("blog", "/blog/", static=True)
     config.add_route(
@@ -241,17 +237,13 @@ def includeme(config):  # pylint: disable=too-many-statements
     config.add_route("education", "/education/", static=True)
     config.add_route("for-publishers", "/for-publishers/", static=True)
     config.add_route("fund", "/fund/", static=True)
-    config.add_route("help-center", "/help/", static=True)
+    config.add_route("help-center", "/help", static=True)
     config.add_route("hypothesis-github", "https://github.com/hypothesis", static=True)
-    config.add_route(
-        "hypothesis-twitter", "https://twitter.com/hypothes_is", static=True
-    )
+    config.add_route("hypothesis-twitter", "https://twitter.com/hypothes_is", static=True)
     config.add_route("jobs", "/jobs/", static=True)
     config.add_route("press", "/press/", static=True)
     config.add_route("privacy", "/privacy/", static=True)
     config.add_route("roadmap", "/roadmap/", static=True)
     config.add_route("team", "/team/", static=True)
     config.add_route("terms-of-service", "/terms-of-service/", static=True)
-    config.add_route(
-        "wordpress-plugin", "https://wordpress.org/plugins/hypothesis/", static=True
-    )
+    config.add_route("wordpress-plugin", "https://wordpress.org/plugins/hypothesis/", static=True)
