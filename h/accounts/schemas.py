@@ -58,12 +58,8 @@ def email_node(**kwargs):
     """Return a Colander schema node for a new user email."""
     return colander.SchemaNode(
         colander.String(),
-        validator=colander.All(
-            validators.Length(max=EMAIL_MAX_LENGTH), validators.Email(), unique_email
-        ),
-        widget=deform.widget.TextInputWidget(
-            template="emailinput", autocomplete="username"
-        ),
+        validator=colander.All(validators.Length(max=EMAIL_MAX_LENGTH), validators.Email(), unique_email),
+        widget=deform.widget.TextInputWidget(template="emailinput", autocomplete="username"),
         **kwargs
     )
 
@@ -75,10 +71,7 @@ def unblacklisted_username(node, value, blacklist=None):
     if value.lower() in blacklist:
         # We raise a generic "user with this name already exists" error so as
         # not to make explicit the presence of a blacklist.
-        msg = _(
-            "Sorry, an account with this username already exists. "
-            "Please enter another one."
-        )
+        msg = _("Sorry, an account with this username already exists. " "Please enter another one.")
         raise colander.Invalid(node, msg)
 
 
@@ -91,32 +84,24 @@ def privacy_acceptance_validator(node, value):
 
 def password_node(**kwargs):
     """Return a Colander schema node for an existing user password."""
-    kwargs.setdefault(
-        "widget", deform.widget.PasswordWidget(autocomplete="current-password")
-    )
+    kwargs.setdefault("widget", deform.widget.PasswordWidget(autocomplete="current-password"))
     return colander.SchemaNode(colander.String(), **kwargs)
 
 
 def new_password_node(**kwargs):
     """Return a Colander schema node for a new user password."""
-    kwargs.setdefault(
-        "widget", deform.widget.PasswordWidget(autocomplete="new-password")
-    )
-    return colander.SchemaNode(
-        colander.String(),
-        validator=validators.Length(min=PASSWORD_MIN_LENGTH),
-        **kwargs
-    )
+    kwargs.setdefault("widget", deform.widget.PasswordWidget(autocomplete="new-password"))
+    return colander.SchemaNode(colander.String(), validator=validators.Length(min=PASSWORD_MIN_LENGTH), **kwargs)
 
 
 def _privacy_accepted_message():
     terms_links = {
         # pylint:disable=consider-using-f-string
         "privacy_policy": '<a class="link" href="{href}">{text}</a>'.format(
-            href="https://web.hypothes.is/privacy/", text=_("privacy policy")
+            href="https://disputas.no/#privacy-more", text=_("privacy policy")
         ),
         "terms_of_service": '<a class="link" href="{href}">{text}</a>'.format(
-            href="https://web.hypothes.is/terms-of-service/", text=_("terms of service")
+            href="https://disputas.no/#termsofuse", text=_("terms of service")
         ),
         "community_guidelines": '<a class="link" href="{href}">{text}</a>'.format(
             href="https://web.hypothes.is/community-guidelines/",
@@ -124,9 +109,7 @@ def _privacy_accepted_message():
         ),
     }
 
-    privacy_msg = _(
-        "I have read and agree to the {privacy}, {tos}, and {community}."
-    ).format(
+    privacy_msg = _("I have read and agree to the {privacy}, {tos}, and {community}.").format(
         privacy=terms_links["privacy_policy"],
         tos=terms_links["terms_of_service"],
         community=terms_links["community_guidelines"],
@@ -149,8 +132,7 @@ class RegisterSchema(CSRFSchema):
         ),
         title=_("Username"),
         hint=_(
-            "Must be between {min} and {max} characters, containing only "
-            "letters, numbers, periods, and underscores."
+            "Must be between {min} and {max} characters, containing only " "letters, numbers, periods, and underscores."
         ).format(min=USERNAME_MIN_LENGTH, max=USERNAME_MAX_LENGTH),
         widget=deform.widget.TextInputWidget(autofocus=True),
     )
@@ -161,17 +143,13 @@ class RegisterSchema(CSRFSchema):
         colander.Boolean(),
         description=Markup(_privacy_accepted_message()),
         validator=privacy_acceptance_validator,
-        widget=deform.widget.CheckboxWidget(
-            omit_label=True, css_class="form-checkbox--inline"
-        ),
+        widget=deform.widget.CheckboxWidget(omit_label=True, css_class="form-checkbox--inline"),
     )
 
     comms_opt_in = colander.SchemaNode(
         colander.Boolean(),
         description=_("I would like to receive news about annotation and Hypothesis."),
-        widget=deform.widget.CheckboxWidget(
-            omit_label=True, css_class="form-checkbox--inline"
-        ),
+        widget=deform.widget.CheckboxWidget(omit_label=True, css_class="form-checkbox--inline"),
         missing=None,
         default=False,
     )
@@ -198,9 +176,7 @@ class EmailChangeSchema(CSRFSchema):
 
 class PasswordChangeSchema(CSRFSchema):
     password = password_node(title=_("Current password"), inactive_label=_("Password"))
-    new_password = new_password_node(
-        title=_("New password"), hide_until_form_active=True
-    )
+    new_password = new_password_node(title=_("New password"), hide_until_form_active=True)
     # No validators: all validation is done on the new_password field and we
     # merely assert that the confirmation field is the same.
     new_password_confirm = colander.SchemaNode(
