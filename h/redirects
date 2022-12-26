@@ -193,8 +193,8 @@
 /teacher-testimonials/                                 exact https://web.hypothes.is/teacher-testimonials/
 /team                                                  exact https://web.hypothes.is/team/
 /team/                                                 exact https://web.hypothes.is/team/
-/terms-of-service                                      exact https://disputas.no/#termsofuse
-/terms-of-service/                                     exact https://disputas.no/#termsofuse
+/terms-of-service                                      exact https://disputas.no/#termsofservice
+/terms-of-service/                                     exact https://disputas.no/#termsofservice
 /thanks                                                exact https://web.hypothes.is/thanks/
 /thanks/                                               exact https://web.hypothes.is/thanks/
 /the-group-home-page                                   exact https://web.hypothes.is/the-group-home-page/
